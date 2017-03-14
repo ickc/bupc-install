@@ -1,0 +1,8 @@
+matrix:
+    include:
+        - os: linux
+          sudo: false
+        - os: osx
+language: generic
+script:
+  - ./upbc-install.sh
