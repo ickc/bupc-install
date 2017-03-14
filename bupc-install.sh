@@ -11,7 +11,13 @@ where:
 
 # getopts ######################################################################
 
-
+gnumake() {
+    if hash gmake 2>/dev/null; then
+        gmake "$@"
+    else
+        make "$@"
+    fi
+}
 
 # reset getopts
 OPTIND=1
@@ -95,7 +101,7 @@ cd "$folderName"
 
 ./configure CC=$CC CXX=$CXX
 
-make && make install -j
+gnumake && gnumake install -j
 if [[ $? -eq 0 ]]; then
 	printf "BUPC build suceeded.\n"
 else
