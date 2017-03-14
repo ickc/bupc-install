@@ -73,6 +73,10 @@ cd "$outdir"
 # download
 if [[ ! -f "$filename" ]]; then
 	curl "$url" -O .
+	if [[ ! -f "$filename" ]]; then
+		printf "Cannot download %s from %s\n" "$filename" "$url" >&2
+		exit 1
+	fi
 else
 	printf "%s already exist. Use the existing %s instead.\n" "$filename" "$filename"
 fi
