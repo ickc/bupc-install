@@ -4,7 +4,7 @@ usage="./$(basename "$0") [-h] [-o outdir] [-u url] [-c CC] [-p CXX] -- install 
 
 where:
 	-h	show this help message
-	-o	set the output directory. Default: \$HOME/.upcc
+	-o	set the temporary output directory. Default: \$HOME/.upcc
 	-u	URL to the source code of BUPC. Default: http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz
 	-c	CC. Default: cc
 	-p	CXX. Default: c++"
@@ -21,6 +21,8 @@ outdir="$HOME/.upcc"
 url="http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz"
 CC="cc"
 CXX="c++"
+# default path for the bin from BUPC
+binPath="/usr/local/berkeley_upc"
 
 # get the options
 while getopts "o:u:c:p:h" opt; do
@@ -115,12 +117,14 @@ else
 	bashProfile=".bashrc"
 fi
 
-touch $HOME/$bashProfile
-
-if ! grep -qE "$folderName" $HOME/$bashProfile; then
-	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$(realpath $folderName)'"' >> $HOME/.bash_profile
+if ! grep -qE "$binPath" $HOME/$bashProfile; then
+	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$binPath'"' >> $HOME/$bashProfile
 else
-	printf "Seems like %s is already in the \$PATH of %s. If not please manually add it to the \$PATH.\n" "$folderName" "$HOME/$bashProfile"
+	printf "Seems like %s is already in the \$PATH of %s. If not, please add it to the \$PATH manually.\n" "$binPath" "$HOME/$bashProfile"
 fi
 
-################################################################################
+# remove source code directory #################################################
+
+if [[ ! $DEBUG ]]; then
+	rm -rf "$outdir"
+fi
