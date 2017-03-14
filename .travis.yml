@@ -2,9 +2,11 @@ matrix:
     include:
         - os: linux
           dist: trusty
-          sudo: false
+          sudo: true
+          script:
+            - sudo ./upbc-install.sh
         - os: osx
           osx_image: xcode8.2
+          script:
+            - ./upbc-install.sh
 language: generic
-script:
-  - ./upbc-install.sh
