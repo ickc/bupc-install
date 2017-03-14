@@ -4,9 +4,9 @@ matrix:
           dist: trusty
           sudo: true
           script:
-            - sudo ./upbc-install.sh
+            - sudo ./bupc-install.sh
         - os: osx
           osx_image: xcode8.2
           script:
-            - ./upbc-install.sh
+            - ./bupc-install.sh
 language: generic
