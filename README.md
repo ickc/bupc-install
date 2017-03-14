@@ -12,4 +12,4 @@ This is a starter script to install [Berkeley UPC](http://upc.lbl.gov/download/)
 
 # License
 
-Following BUPC, BSD license is used.
+Following BUPC, BSD license is used. Specifically, the 3-Clause BSD License.
