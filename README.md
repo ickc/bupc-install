@@ -7,7 +7,7 @@ This is a starter script to install [Berkeley UPC](http://upc.lbl.gov/download/)
 # Usage
 
 ```bash
-./bupc-install.sh -h
+sudo ./bupc-install.sh -h
 ```
 
 # License
