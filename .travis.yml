@@ -5,6 +5,7 @@ matrix:
           sudo: true
         - os: osx
           osx_image: xcode8.2
+          install: brew install homebrew/dupes/make
 language: generic
 script:
   - ./bupc-install.sh -l
