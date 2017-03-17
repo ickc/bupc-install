@@ -49,7 +49,7 @@ decompress() {
 	if [[ ! -d "$folderName" ]]; then
 		tar -xzf "$@"
 	else
-		printf "%s already existed. To remove it, run\nrm -r %s\n" "$folderName" "$(realpath "$folderName")" >&2
+		printf "%s already existed. To remove it, run\nrm -r %s\n" "$folderName" "$(readlink -f "$folderName")" >&2
 		exit 1
 	fi
 }
@@ -91,7 +91,7 @@ while getopts "o:u:lU:c:p:h" opt; do
 done
 
 # get the absolute path of outdir
-outdir=$(realpath outdir)
+outdir=$(readlink -f outdir)
 # get the filenameBUPC from the urlBUPC
 filenameBUPC="${urlBUPC##*/}"
 folderNameBUPC="${filenameBUPC%.tar.gz}"
