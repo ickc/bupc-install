@@ -21,6 +21,16 @@ gnumake() {
 	fi
 }
 
+mkdirerr() {
+	mkdir -p "$@"
+	if [[ $? -eq 0 ]]; then
+		printf "Successfully created %s\n" "$@"
+	else
+		printf "Could not create %s\n" "$@" >&2
+		exit 1
+	fi
+}
+
 # reset getopts
 OPTIND=1
 
@@ -91,30 +101,12 @@ You may want to run\n\
 rm -r %s\n\
 to clear this folder if the installation fails.\n" "$outdir" "$outdir"
 fi
-mkdir -p "$tempdir"
-if [[ $? -eq 0 ]]; then
-	printf "Successfully created %s\n" "$tempdir"
-else
-	printf "Could not create %s\n" "$tempdir" >&2
-	exit 1
-fi
+mkdirerr "$tempdir"
 # BUPC
-mkdir -p "$bupcdir"
-if [[ $? -eq 0 ]]; then
-	printf "Successfully created %s\n" "$bupcdir"
-else
-	printf "Could not create %s\n" "$bupcdir" >&2
-	exit 1
-fi
+mkdirerr "$bupcdir"
 # Translator
 if [[ ! -z "$local" ]]; then
-	mkdir -p "$translatordir"
-	if [[ $? -eq 0 ]]; then
-		printf "Successfully created %s\n" "$translatordir"
-	else
-		printf "Could not create %s\n" "$translatordir" >&2
-		exit 1
-	fi
+	mkdirerr "$translatordir"
 fi
 
 # from now on we're in $tempdir
