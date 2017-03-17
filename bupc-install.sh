@@ -59,6 +59,8 @@ fi
 # dirs within outdir
 tempdir="$outdir/temp"
 bupcdir="$outdir/bupc"
+bupcbin="$bupcdir/bin"
+bupcman="$bupcdir/man"
 
 # Download #####################################################################
 
@@ -138,10 +140,16 @@ else
 	bashProfile=".bashrc"
 fi
 
-if ! grep -qE "$bupcdir" $HOME/$bashProfile; then
-	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$bupcdir'"' >> $HOME/$bashProfile
+if ! grep -qE "$bupcbin" $HOME/$bashProfile; then
+	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$bupcbin'"' >> $HOME/$bashProfile
 else
-	printf "Seems like %s is already in the \$PATH of %s. If not, please add it to the \$PATH manually.\n" "$bupcdir" "$HOME/$bashProfile"
+	printf "Seems like %s is already in the \$PATH of %s. If not, please add it to the \$PATH manually.\n" "$bupcbin" "$HOME/$bashProfile"
+fi
+
+if ! grep -qE "$bupcman" $HOME/$bashProfile; then
+	printf "%s\n" "" "# BUPC MAN" 'export MANPATH="$MANPATH:'$bupcman'"' >> $HOME/$bashProfile
+else
+	printf "Seems like %s is already in the \$MANPATH of %s. If not, please add it to the \$MANPATH manually.\n" "$bupcman" "$HOME/$bashProfile"
 fi
 
 # remove source code directory #################################################
