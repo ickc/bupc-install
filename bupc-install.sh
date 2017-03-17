@@ -56,6 +56,10 @@ if [[ $DEBUG ]]; then
 	printf "%s\n" "$outdir" "$url" "$CC" "$CXX" "$filename" "$folderName"
 fi
 
+# dirs within outdir
+tempdir="$outdir/temp"
+bupcdir="$outdir/bupc"
+
 # Download #####################################################################
 
 # create out-dir
@@ -65,16 +69,23 @@ You may want to run\n\
 rm -r %s\n\
 to clear this folder if the installation fails.\n" "$outdir" "$outdir"
 fi
-mkdir -p "$outdir/temp"
+mkdir -p "$tempdir"
 if [[ $? -eq 0 ]]; then
-	printf "Successfully created %s/temp\n" "$outdir"
+	printf "Successfully created %s\n" "$tempdir"
 else
-	printf "Could not create %s/temp\n" "$outdir" >&2
+	printf "Could not create %s\n" "$tempdir" >&2
+	exit 1
+fi
+mkdir -p "$bupcdir"
+if [[ $? -eq 0 ]]; then
+	printf "Successfully created %s\n" "$bupcdir"
+else
+	printf "Could not create %s\n" "$bupcdir" >&2
 	exit 1
 fi
 
-# from now on we're in $outdir/temp
-cd "$outdir/temp"
+# from now on we're in $tempdir
+cd "$tempdir"
 
 # download
 if [[ ! -f "$filename" ]]; then
@@ -99,7 +110,7 @@ fi
 # from now on we're in folderName
 cd "$folderName"
 
-./configure CC=$CC CXX=$CXX --prefix="$outdir"
+./configure CC=$CC CXX=$CXX --prefix="$bupcdir"
 
 gnumake && gnumake install -j
 if [[ $? -eq 0 ]]; then
@@ -127,14 +138,14 @@ else
 	bashProfile=".bashrc"
 fi
 
-if ! grep -qE "$outdir" $HOME/$bashProfile; then
-	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$outdir'"' >> $HOME/$bashProfile
+if ! grep -qE "$bupcdir" $HOME/$bashProfile; then
+	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$bupcdir'"' >> $HOME/$bashProfile
 else
-	printf "Seems like %s is already in the \$PATH of %s. If not, please add it to the \$PATH manually.\n" "$outdir" "$HOME/$bashProfile"
+	printf "Seems like %s is already in the \$PATH of %s. If not, please add it to the \$PATH manually.\n" "$bupcdir" "$HOME/$bashProfile"
 fi
 
 # remove source code directory #################################################
 
 if [[ ! $DEBUG ]]; then
-	rm -rf "$outdir/temp"
+	rm -rf "$tempdir"
 fi
