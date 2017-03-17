@@ -55,6 +55,9 @@ while getopts "o:u:lU:c:p:h" opt; do
 	esac
 done
 
+# get the absolute path of outdir
+outdir=$(realpath outdir)
+
 # get the filename from the url
 filename="${url##*/}"
 folderName="${filename%.tar.gz}"
