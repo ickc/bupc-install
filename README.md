@@ -2,12 +2,18 @@
 
 # Description
 
-This is a starter script to install [Berkeley UPC](http://upc.lbl.gov/download/). It uses the simplest settings. macOS and Linux platforms are supported.
+This is a starter script to install [Berkeley UPC](http://upc.lbl.gov/download/). It uses the simplest configurations. macOS and Linux platforms are supported.
 
 # Usage
 
 ```bash
-sudo ./bupc-install.sh -h
+./bupc-install.sh -h
+```
+
+To install the BUPC translator locally, use
+
+```bash
+./bupc-install.sh -l
 ```
 
 Note that the default path for the bin is `$HOME/.upcc` such that `sudo` is not needed. You can specify your own by,
