@@ -1,11 +1,27 @@
+language: c
 matrix:
     include:
         - os: linux
           dist: trusty
           sudo: true
+          script:
+            - ./bupc-install.sh -l
+          env: local
         - os: osx
           osx_image: xcode8.2
           install: brew install homebrew/dupes/make
-language: c
-script:
-  - ./bupc-install.sh -l
+          script:
+            - ./bupc-install.sh -l
+          env: local
+        - os: linux
+          dist: trusty
+          sudo: true
+          script:
+            - ./bupc-install.sh
+          env: http
+        - os: osx
+          osx_image: xcode8.2
+          install: brew install homebrew/dupes/make
+          script:
+            - ./bupc-install.sh
+          env: http
