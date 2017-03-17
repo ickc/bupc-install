@@ -7,4 +7,4 @@ matrix:
           osx_image: xcode8.2
 language: generic
 script:
-  - ./bupc-install.sh
+  - ./bupc-install.sh -l
