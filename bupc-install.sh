@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-usage="./$(basename "$0") [-h] [-o outdir] [-u url] [-c CC] [-p CXX] -- install Berkeley UPC
+usage="./$(basename "$0") [-h] [-o outdir] [-u url] [-l local] [-U url-translator] [-c CC] [-p CXX] -- install Berkeley UPC
 
 where:
 	-h	show this help message
 	-o	set the output directory. Default: \$HOME/.upcc
 	-u	URL to the source code of BUPC. Default: http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz
+	-l	build the translator locally instead of the default HTTP-based Berkeley UPC-to-C (BUPC) translator.
+	-U	URL to the source code of BUPC-translator. Default: http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.0.tar.gz
 	-c	CC. Default: cc
 	-p	CXX. Default: c++"
 
@@ -25,15 +27,20 @@ OPTIND=1
 # Initialize parameters
 outdir="$HOME/.upcc"
 url="http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz"
+urlTranslator="http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.0.tar.gz"
 CC="cc"
 CXX="c++"
 
 # get the options
-while getopts "o:u:c:p:h" opt; do
+while getopts "o:u:lU:c:p:h" opt; do
 	case "$opt" in
 	o)	outdir="$OPTARG"
 		;;
 	u)	url="$OPTARG"
+		;;
+	l)	local=true
+		;;
+	U)	urlTranslator="$OPTARG"
 		;;
 	c)	CC="$OPTARG"
 		;;
@@ -52,8 +59,12 @@ done
 filename="${url##*/}"
 folderName="${filename%.tar.gz}"
 
+# get the filename from the translator url
+filenameTranslator="${urlTranslator##*/}"
+folderNameTranslator="${filenameTranslator%.tar.gz}"
+
 if [[ $DEBUG ]]; then
-	printf "%s\n" "$outdir" "$url" "$CC" "$CXX" "$filename" "$folderName"
+	printf "%s\n" "$outdir" "$url" "$local" "$urlTranslator" "$CC" "$CXX" "$filename" "$folderName"
 fi
 
 # dirs within outdir
@@ -61,6 +72,12 @@ tempdir="$outdir/temp"
 bupcdir="$outdir/bupc"
 bupcbin="$bupcdir/bin"
 bupcman="$bupcdir/man"
+translatordir="$outdir/translator"
+
+# warning message for translator without gmake
+if [[ ! -z "$local" ]] && [[ $(uname) == "Darwin" ]]; then
+	printf "%s\n" "Note that compiling the translator requires GNU make." "If the installation failed, install GNU make by" "brew install homebrew/dupes/make"
+fi
 
 # Download #####################################################################
 
@@ -78,6 +95,7 @@ else
 	printf "Could not create %s\n" "$tempdir" >&2
 	exit 1
 fi
+# BUPC
 mkdir -p "$bupcdir"
 if [[ $? -eq 0 ]]; then
 	printf "Successfully created %s\n" "$bupcdir"
@@ -85,11 +103,21 @@ else
 	printf "Could not create %s\n" "$bupcdir" >&2
 	exit 1
 fi
+# Translator
+if [[ ! -z "$local" ]]; then
+	mkdir -p "$translatordir"
+	if [[ $? -eq 0 ]]; then
+		printf "Successfully created %s\n" "$translatordir"
+	else
+		printf "Could not create %s\n" "$translatordir" >&2
+		exit 1
+	fi
+fi
 
 # from now on we're in $tempdir
 cd "$tempdir"
 
-# download
+# download bupc
 if [[ ! -f "$filename" ]]; then
 	curl "$url" -O .
 	if [[ ! -f "$filename" ]]; then
@@ -107,13 +135,49 @@ else
 	exit 1
 fi
 
+# download translator
+if [[ ! -z "$local" ]]; then
+	if [[ ! -f "$filenameTranslator" ]]; then
+		curl "$urlTranslator" -O .
+		if [[ ! -f "$filenameTranslator" ]]; then
+			printf "Cannot download %s from %s\n" "$filenameTranslator" "$urlTranslator" >&2
+			exit 1
+		fi
+	else
+		printf "%s already exist. Use the existing %s instead.\n" "$filenameTranslator" "$filenameTranslator"
+	fi
+	# uncompress
+	if [[ ! -d "$folderNameTranslator" ]]; then
+		tar -xzf "$filenameTranslator"
+	else
+		printf "%s already existed. To remove it, run\nrm -r %s\n" "$folderNameTranslator" "$(realpath "$folderNameTranslator")" >&2
+		exit 1
+	fi
+fi
+
 # Compile ######################################################################
 
+# Translator
+if [[ ! -z "$local" ]]; then
+	# from now on we're in $folderNameTranslator
+	cd "$folderNameTranslator"
+	gnumake && gnumake install -j PREFIX="$translatordir"
+	if [[ $? -eq 0 ]]; then
+		printf "BUPC Translator build suceeded.\n"
+	else
+		printf "BUPC Translator build failed.\n" >&2
+		exit 1
+	fi
+fi
+
+# BUPC
 # from now on we're in folderName
-cd "$folderName"
-
-./configure CC=$CC CXX=$CXX --prefix="$bupcdir"
-
+cd "$tempdir/$folderName"
+if [[ ! -z "$local" ]]; then
+	./configure CC=$CC CXX=$CXX --prefix="$bupcdir" BUPC_TRANS=$translatordir/targ
+else
+	./configure CC=$CC CXX=$CXX --prefix="$bupcdir"
+fi
 gnumake && gnumake install -j
 if [[ $? -eq 0 ]]; then
 	printf "BUPC build suceeded.\n"
