@@ -12,6 +12,9 @@ matrix:
           install: brew install homebrew/dupes/make
           script:
             - ./bupc-install.sh -l
+          cache:
+            directories:
+            - ~/.upcc
           env: local
         - os: linux
           dist: trusty
