@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-usage="./$(basename "$0") [-h] [-o outdir] [-u url] [-l local] [-U url-translator] [-c CC] [-p CXX] -- install Berkeley UPC
+usage="./$(basename "$0") [-h] [-o outdir] [-u url-BPUC] [-l local] [-U url-translator] [-c CC] [-p CXX] -- install Berkeley UPC
 
 where:
 	-h	show this help message
@@ -36,7 +36,7 @@ OPTIND=1
 
 # Initialize parameters
 outdir="$HOME/.upcc"
-url="http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz"
+urlBUPC="http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz"
 urlTranslator="http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.0.tar.gz"
 CC="cc"
 CXX="c++"
@@ -46,7 +46,7 @@ while getopts "o:u:lU:c:p:h" opt; do
 	case "$opt" in
 	o)	outdir="$OPTARG"
 		;;
-	u)	url="$OPTARG"
+	u)	urlBUPC="$OPTARG"
 		;;
 	l)	local=true
 		;;
@@ -68,16 +68,16 @@ done
 # get the absolute path of outdir
 outdir=$(realpath outdir)
 
-# get the filename from the url
-filename="${url##*/}"
-folderName="${filename%.tar.gz}"
+# get the filenameBUPC from the urlBUPC
+filenameBUPC="${urlBUPC##*/}"
+folderNameBUPC="${filenameBUPC%.tar.gz}"
 
-# get the filename from the translator url
+# get the filenameBUPC from the urlTranslator
 filenameTranslator="${urlTranslator##*/}"
 folderNameTranslator="${filenameTranslator%.tar.gz}"
 
 if [[ $DEBUG ]]; then
-	printf "%s\n" "$outdir" "$url" "$local" "$urlTranslator" "$CC" "$CXX" "$filename" "$folderName"
+	printf "%s\n" "$outdir" "$urlBUPC" "$local" "$urlTranslator" "$CC" "$CXX" "$filenameBUPC" "$folderNameBUPC"
 fi
 
 # dirs within outdir
@@ -113,20 +113,20 @@ fi
 cd "$tempdir"
 
 # download bupc
-if [[ ! -f "$filename" ]]; then
-	curl "$url" -O .
-	if [[ ! -f "$filename" ]]; then
-		printf "Cannot download %s from %s\n" "$filename" "$url" >&2
+if [[ ! -f "$filenameBUPC" ]]; then
+	curl "$urlBUPC" -O .
+	if [[ ! -f "$filenameBUPC" ]]; then
+		printf "Cannot download %s from %s\n" "$filenameBUPC" "$urlBUPC" >&2
 		exit 1
 	fi
 else
-	printf "%s already exist. Use the existing %s instead.\n" "$filename" "$filename"
+	printf "%s already exist. Use the existing %s instead.\n" "$filenameBUPC" "$filenameBUPC"
 fi
 # uncompress
-if [[ ! -d "$folderName" ]]; then
-	tar -xzf "$filename"
+if [[ ! -d "$folderNameBUPC" ]]; then
+	tar -xzf "$filenameBUPC"
 else
-	printf "%s already existed. To remove it, run\nrm -r %s\n" "$folderName" "$(realpath "$folderName")" >&2
+	printf "%s already existed. To remove it, run\nrm -r %s\n" "$folderNameBUPC" "$(realpath "$folderNameBUPC")" >&2
 	exit 1
 fi
 
@@ -166,8 +166,8 @@ if [[ ! -z "$local" ]]; then
 fi
 
 # BUPC
-# from now on we're in folderName
-cd "$tempdir/$folderName"
+# from now on we're in folderNameBUPC
+cd "$tempdir/$folderNameBUPC"
 if [[ ! -z "$local" ]]; then
 	./configure CC=$CC CXX=$CXX --prefix="$bupcdir" BUPC_TRANS=$translatordir/targ
 else
