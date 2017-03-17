@@ -4,7 +4,7 @@ usage="./$(basename "$0") [-h] [-o outdir] [-u url] [-c CC] [-p CXX] -- install 
 
 where:
 	-h	show this help message
-	-o	set the temporary output directory. Default: \$HOME/.upcc
+	-o	set the output directory. Default: \$HOME/.upcc
 	-u	URL to the source code of BUPC. Default: http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz
 	-c	CC. Default: cc
 	-p	CXX. Default: c++"
@@ -27,8 +27,6 @@ outdir="$HOME/.upcc"
 url="http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz"
 CC="cc"
 CXX="c++"
-# default path for the bin from BUPC
-binPath="/usr/local/berkeley_upc"
 
 # get the options
 while getopts "o:u:c:p:h" opt; do
@@ -61,20 +59,19 @@ fi
 # Download #####################################################################
 
 # create out-dir
-if [[ ! -d "$outdir" ]]; then
-	mkdir -p $outdir
-	if [[ $? -eq 0 ]]; then
-		printf "Successfully created %s\n" "$outdir"
-	else
-		printf "Could not create %s\n" "$outdir" >&2
-		exit 1
-	fi
+if [[ -d "$outdir" ]]; then
+	printf "%s already existed. Contents will be overwritten.\n" "$outdir"
+fi
+mkdir -p "$outdir/temp"
+if [[ $? -eq 0 ]]; then
+	printf "Successfully created %s/temp\n" "$outdir"
 else
-	printf "%s already existed. Use this for the output directory.\n" "$outdir"
+	printf "Could not create %s/temp\n" "$outdir" >&2
+	exit 1
 fi
 
-# from now on we're in outdir
-cd "$outdir"
+# from now on we're in $outdir/temp
+cd "$outdir/temp"
 
 # download
 if [[ ! -f "$filename" ]]; then
@@ -99,7 +96,7 @@ fi
 # from now on we're in folderName
 cd "$folderName"
 
-./configure CC=$CC CXX=$CXX
+./configure CC=$CC CXX=$CXX --prefix="$outdir"
 
 gnumake && gnumake install -j
 if [[ $? -eq 0 ]]; then
@@ -127,14 +124,14 @@ else
 	bashProfile=".bashrc"
 fi
 
-if ! grep -qE "$binPath" $HOME/$bashProfile; then
-	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$binPath'"' >> $HOME/$bashProfile
+if ! grep -qE "$outdir" $HOME/$bashProfile; then
+	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$outdir'"' >> $HOME/$bashProfile
 else
-	printf "Seems like %s is already in the \$PATH of %s. If not, please add it to the \$PATH manually.\n" "$binPath" "$HOME/$bashProfile"
+	printf "Seems like %s is already in the \$PATH of %s. If not, please add it to the \$PATH manually.\n" "$outdir" "$HOME/$bashProfile"
 fi
 
 # remove source code directory #################################################
 
 if [[ ! $DEBUG ]]; then
-	rm -rf "$outdir"
+	rm -rf "$outdir/temp"
 fi
