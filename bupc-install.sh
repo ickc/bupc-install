@@ -14,11 +14,11 @@ where:
 # getopts ######################################################################
 
 gnumake() {
-    if hash gmake 2>/dev/null; then
-        gmake "$@"
-    else
-        make "$@"
-    fi
+	if hash gmake 2>/dev/null; then
+		gmake "$@"
+	else
+		make "$@"
+	fi
 }
 
 # reset getopts
