@@ -60,7 +60,10 @@ fi
 
 # create out-dir
 if [[ -d "$outdir" ]]; then
-	printf "%s already existed. Contents will be overwritten.\n" "$outdir"
+	printf "%s already existed. Contents will be overwritten.\n\
+You may want to run\n\
+rm -r %s\n\
+to clear this folder if the installation fails.\n" "$outdir" "$outdir"
 fi
 mkdir -p "$outdir/temp"
 if [[ $? -eq 0 ]]; then
