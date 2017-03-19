@@ -61,8 +61,8 @@ OPTIND=1
 
 # Initialize parameters
 outdir="$HOME/.upcc"
-urlBUPC="http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz"
-urlTranslator="http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.0.tar.gz"
+urlBUPC="http://upc.lbl.gov/download/release/berkeley_upc-2.24.2.tar.gz"
+urlTranslator="http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.2.tar.gz"
 CC="cc"
 CXX="c++"
 
