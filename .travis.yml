@@ -25,9 +25,9 @@ script:
 - |
   case "$BUILD" in
     http)
-      DEBUG=true ./bupc-install.sh
+      sudo DEBUG=true ./bupc-install.sh
       ;;
     local)
-      DEBUG=true ./bupc-install.sh -l
+      sudo DEBUG=true ./bupc-install.sh -l
       ;;
   esac
