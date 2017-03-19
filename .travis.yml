@@ -4,27 +4,31 @@ matrix:
         - os: linux
           dist: trusty
           sudo: true
-          script:
-            - ./bupc-install.sh -l
-          env: local
-        - os: osx
-          osx_image: xcode8.2
-          install: brew install homebrew/dupes/make
-          script:
-            - ./bupc-install.sh -l
-          cache:
-            directories:
-            - ~/.upcc
-          env: local
+          env: BUILD=local
         - os: linux
           dist: trusty
           sudo: true
-          script:
-            - ./bupc-install.sh
-          env: http
+          env: BUILD=http
         - os: osx
           osx_image: xcode8.2
           install: brew install homebrew/dupes/make
-          script:
-            - ./bupc-install.sh
-          env: http
+          env: BUILD=local
+        - os: osx
+          osx_image: xcode8.2
+          install: brew install homebrew/dupes/make
+          env: BUILD=http
+    allow_failures:
+    - env: BUILD=local
+cache:
+    directories:
+    - ~/.upcc/temp
+script:
+- |
+  case "$BUILD" in
+    local)
+      DEBUG=true ./bupc-install.sh -l
+      ;;
+    http)
+      DEBUG=true ./bupc-install.sh
+      ;;
+  esac
