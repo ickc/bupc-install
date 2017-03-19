@@ -5,9 +5,9 @@ usage="./$(basename "$0") [-h] [-o outdir] [-u url-BPUC] [-l local] [-U url-tran
 where:
 	-h	show this help message
 	-o	set the output directory. Default: \$HOME/.upcc
-	-u	URL to the source code of BUPC. Default: http://upc.lbl.gov/download/release/berkeley_upc-2.24.0.tar.gz
+	-u	URL to the source code of BUPC. Default: http://upc.lbl.gov/download/release/berkeley_upc-2.24.2.tar.gz
 	-l	build the translator locally instead of the default HTTP-based Berkeley UPC-to-C (BUPC) translator.
-	-U	URL to the source code of BUPC-translator. Default: http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.0.tar.gz
+	-U	URL to the source code of BUPC-translator. Default: http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.2.tar.gz
 	-c	CC. Default: cc
 	-p	CXX. Default: c++"
 
