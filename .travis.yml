@@ -4,19 +4,18 @@ matrix:
         - os: linux
           dist: trusty
           sudo: true
-          env: BUILD=local
+          env: BUILD=http
         - os: linux
           dist: trusty
           sudo: true
+          env: BUILD=local
+        - os: osx
+          osx_image: xcode8.2
           env: BUILD=http
         - os: osx
           osx_image: xcode8.2
           install: brew install homebrew/dupes/make
           env: BUILD=local
-        - os: osx
-          osx_image: xcode8.2
-          install: brew install homebrew/dupes/make
-          env: BUILD=http
     allow_failures:
     - env: BUILD=local
 cache:
@@ -25,10 +24,10 @@ cache:
 script:
 - |
   case "$BUILD" in
-    local)
-      DEBUG=true ./bupc-install.sh -l
-      ;;
     http)
       DEBUG=true ./bupc-install.sh
+      ;;
+    local)
+      DEBUG=true ./bupc-install.sh -l
       ;;
   esac
