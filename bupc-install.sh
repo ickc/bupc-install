@@ -49,8 +49,7 @@ decompress() {
 	if [[ ! -d "$folderName" ]]; then
 		tar -xzf "$@"
 	else
-		printf "%s already existed. To remove it, run\nrm -r %s\n" "$folderName" "$tempdir/$folderName" >&2
-		exit 1
+		printf "%s already existed. To remove it, run\nrm -r %s\nUse the existing %s instead.\n" "$folderName" "$tempdir/$folderName" "$folderName"
 	fi
 }
 
