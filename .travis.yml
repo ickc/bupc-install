@@ -33,11 +33,14 @@ script:
       ;;
   esac
 before_deploy:
-    - cd ~/.upcc/bupc && tar -cvzf "../berkeley_upc-2.24.2-$(uname)-$BUILD.tar.gz" ./
+    - rm -rf dist/
+    - mkdir -p dist/
+    - cp -r ~/.upcc/bupc/ dist/
+    - cd dist/ && tar -cvzf "../berkeley_upc-2.24.2-$(uname)-$BUILD.tar.gz" ./ && cd ..
 deploy:
     provider: releases
     api_key: "$GH_TOKEN_SECURE"
-    file: "~/.upcc/berkeley_upc-2.24.2-$(uname)-$BUILD.tar.gz"
+    file: "berkeley_upc-2.24.2-$(uname)-$BUILD.tar.gz"
     skip_cleanup: true
     on:
         tags: true
