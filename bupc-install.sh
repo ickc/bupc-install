@@ -1,15 +1,24 @@
 #!/usr/bin/env bash
 
-usage="./$(basename "$0") [-h] [-o outdir] [-u url-BPUC] [-l local] [-U url-translator] [-c CC] [-p CXX] -- install Berkeley UPC
+# default version, will be overridden by cli option
+version="2.24.2"
+
+usage="./$(basename "$0") [-h] [-o outdir] [-v version] [-l local] [-c CC] [-p CXX] --- install Berkeley UPC
 
 where:
 	-h	show this help message
 	-o	set the output directory. Default: \$HOME/.upcc
-	-u	URL to the source code of BUPC. Default: http://upc.lbl.gov/download/release/berkeley_upc-2.24.2.tar.gz
+	-v	the version of the Berkeley UPC that you want to install. Default: %s
 	-l	build the translator locally instead of the default HTTP-based Berkeley UPC-to-C (BUPC) translator.
-	-U	URL to the source code of BUPC-translator. Default: http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.2.tar.gz
 	-c	CC. Default: cc
-	-p	CXX. Default: c++"
+	-p	CXX. Default: c++
+
+Note: Default URLs are:
+
+	BUPC source code	http://upc.lbl.gov/download/release/berkeley_upc-%s.tar.gz
+	Translator source code	http://upc.lbl.gov/download/release/berkeley_upc_translator-%s.tar.gz
+	HTTP Translator URL	http://upc-translator.lbl.gov/upcc-%s.cgi
+"
 
 # Helper functions #############################################################
 
@@ -60,34 +69,33 @@ OPTIND=1
 
 # Initialize parameters
 outdir="$HOME/.upcc"
-urlBUPC="http://upc.lbl.gov/download/release/berkeley_upc-2.24.2.tar.gz"
-urlTranslator="http://upc.lbl.gov/download/release/berkeley_upc_translator-2.24.2.tar.gz"
 CC="cc"
 CXX="c++"
 
 # get the options
-while getopts "o:u:lU:c:p:h" opt; do
+while getopts "o:v:lc:p:h" opt; do
 	case "$opt" in
 	o)	outdir="$OPTARG"
 		;;
-	u)	urlBUPC="$OPTARG"
+	v)	version="$OPTARG"
 		;;
 	l)	local=true
-		;;
-	U)	urlTranslator="$OPTARG"
 		;;
 	c)	CC="$OPTARG"
 		;;
 	p)	CXX="$OPTARG"
 		;;
-	h)	printf "%s\n" "$usage"
+	h)	printf "$usage" "$version" "$version" "$version" "$version"
 		exit 0
 		;;
-	*)	printf "%s\n" "$usage"
+	*)	printf "$usage" "$version" "$version" "$version" "$version"
 		exit 1
 		;;
 	esac
 done
+
+urlBUPC="http://upc.lbl.gov/download/release/berkeley_upc-$version.tar.gz"
+urlTranslator="http://upc.lbl.gov/download/release/berkeley_upc_translator-$version.tar.gz"
 
 # get the filenameBUPC from the urlBUPC
 filenameBUPC="${urlBUPC##*/}"
