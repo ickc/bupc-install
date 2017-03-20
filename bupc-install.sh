@@ -172,7 +172,7 @@ fi
 if [[ ! -z "$local" ]]; then
 	# from now on we're in $folderNameTranslator
 	cd "$folderNameTranslator"
-	gnumake && gnumake install -j PREFIX="$translatordir"
+	gnumake CC=$CC CXX=$CXX && gnumake install -j PREFIX="$translatordir" CC=$CC CXX=$CXX
 	if [[ $? -eq 0 ]]; then
 		printf "BUPC Translator build suceeded.\n"
 	else
