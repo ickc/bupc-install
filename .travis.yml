@@ -18,6 +18,7 @@ matrix:
           env: BUILD=local
     allow_failures:
     - env: BUILD=local
+    fast_finish: true
 cache:
     directories:
     - ~/.upcc/temp
