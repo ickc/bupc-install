@@ -121,25 +121,6 @@ if [[ ! -z "$local" ]] && [[ $(uname) == "Darwin" ]]; then
 	printf "%s\n" "Note that compiling the translator requires GNU make." "If the installation failed, install GNU make by" "brew install homebrew/dupes/make"
 fi
 
-if [[ $DEBUG ]]; then
-	printf "%s\n" \
-		"$outdir" \
-		"$urlBUPC" \
-		"$local" \
-		"$urlTranslator" \
-		"$CC" \
-		"$CXX" \
-		"$filenameBUPC" \
-		"$folderNameBUPC" \
-		"$filenameTranslator" \
-		"$folderNameTranslator" \
-		"$tempdir" \
-		"$bupcdir" \
-		"$bupcbin" \
-		"$bupcman" \
-		"$translatordir"
-fi
-
 # Download #####################################################################
 
 # create out-dir
