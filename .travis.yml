@@ -32,3 +32,15 @@ script:
       sudo DEBUG=true ./bupc-install.sh -l
       ;;
   esac
+before_deploy:
+    - cd ~/.upcc/bupc && tar -cvzf "../berkeley_upc-2.24.2-$(uname)-$BUILD.tar.gz" ./
+deploy:
+    provider: releases
+    api_key: "$GH_TOKEN_SECURE"
+    file: "~/.upcc/berkeley_upc-2.24.2-$(uname)-$BUILD.tar.gz"
+    skip_cleanup: true
+    on:
+        tags: true
+env:
+    global:
+        secure: "Q0D5E6Icg3yB1+L4iYfhqsBPDnjX/AtDr6v8NSe0jYdxAbhdmgqP2OF8zEIS/wphJP0qyoRrqFBDdrPaUSVj+5HLV+oPxX/yOK/egOR7Na5oddp7ejvMLJ74F+CnjILGDfmMg9e9ExHkgHZsRTCkEWVRSY1ME9z4L0dZqeDbS3efOcYQSaUFhrZS8HERWO8ai3sKBUwXRGT84pcJDv0QWyNdvR3nL7SmZmrGBV/Zovii1joqc/fvr/IWUfU6Ao9XhHqk8+tFK75Sa7gLJXi21EDWcqLcDzPYWbXzQN/3/X1y0NbkMVUvPgK/tJYjlV4fGryQFQRo9xvaajd4p/Sw5xDjveRGtLT/CB2JePFvYLQqlYb9mlpb56STqvlo/LC2HHRE0+RkH5eB2tV6DLD2/eBMtEaH2h9ILHTkImykk333nqTkenCOgxOwL1epKBsgPDiBPISE7uj0D/LQoLkqaO2jfM69NbRXjwOUFH4CarKUh538EG2s2CY3S0Zz0fyKRRoXNCiAw+Iyc6ohK+hu7tRb56Kl63iPoNIJpG894iD44xQn2nWz54j3OmbMKzuLFPyhDiEIXiSwGqR29TmRUtaiapfsql34Wy95epazAUROe0MnSUaHgy51sCUNM4dUZXsmoOsF6Wf2eFmK3Mkzz+WCHDpzSHUZlTEmOWQIWvE="
