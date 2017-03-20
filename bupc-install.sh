@@ -8,7 +8,7 @@ fi
 # default version, will be overridden by cli option
 version="2.24.2"
 
-usage="./$(basename "$0") [-h] [-o outdir] [-v version] [-l local] [-c CC] [-p CXX] --- install Berkeley UPC
+usage="./$(basename "$0") [-h] [-o outdir] [-v version] [-l local] [-c CC] [-C CXX] --- install Berkeley UPC
 
 where:
 	-h	show this help message
@@ -16,7 +16,7 @@ where:
 	-v	the version of the Berkeley UPC that you want to install. Default: %s
 	-l	build the translator locally instead of the default HTTP-based Berkeley UPC-to-C (BUPC) translator.
 	-c	CC. Default: cc
-	-p	CXX. Default: c++
+	-C	CXX. Default: c++
 
 Note: Default URLs are:
 
@@ -78,7 +78,7 @@ CC="cc"
 CXX="c++"
 
 # get the options
-while getopts "o:v:lc:p:h" opt; do
+while getopts "o:v:lc:C:h" opt; do
 	case "$opt" in
 	o)	outdir="$OPTARG"
 		;;
@@ -88,7 +88,7 @@ while getopts "o:v:lc:p:h" opt; do
 		;;
 	c)	CC="$OPTARG"
 		;;
-	p)	CXX="$OPTARG"
+	C)	CXX="$OPTARG"
 		;;
 	h)	printf "$usage" "$version" "$version" "$version" "$version"
 		exit 0
