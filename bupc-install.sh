@@ -7,7 +7,7 @@ usage="./$(basename "$0") [-h] [-o outdir] [-v version] [-l local] [-c CC] [-p C
 
 where:
 	-h	show this help message
-	-o	set the output directory. Default: \$HOME/.upcc
+	-o	set the output directory. Default: $HOME/.upcc
 	-v	the version of the Berkeley UPC that you want to install. Default: %s
 	-l	build the translator locally instead of the default HTTP-based Berkeley UPC-to-C (BUPC) translator.
 	-c	CC. Default: cc
@@ -172,7 +172,7 @@ fi
 if [[ ! -z "$local" ]]; then
 	# from now on we're in $folderNameTranslator
 	cd "$folderNameTranslator"
-	gnumake CC=$CC CXX=$CXX && gnumake install -j PREFIX="$translatordir" CC=$CC CXX=$CXX
+	gnumake CC="$CC" CXX="$CXX" && gnumake install -j PREFIX="$translatordir" CC="$CC" CXX="$CXX"
 	if [[ $? -eq 0 ]]; then
 		printf "BUPC Translator build suceeded.\n"
 	else
@@ -185,9 +185,9 @@ fi
 # from now on we're in folderNameBUPC
 cd "$tempdir/$folderNameBUPC"
 if [[ ! -z "$local" ]]; then
-	./configure CC=$CC CXX=$CXX --prefix="$bupcdir" BUPC_TRANS=$translatordir/targ
+	./configure CC="$CC" CXX="$CXX" --prefix="$bupcdir" BUPC_TRANS="$translatordir/targ"
 else
-	./configure CC=$CC CXX=$CXX --prefix="$bupcdir"
+	./configure CC="$CC" CXX="$CXX" --prefix="$bupcdir"
 fi
 gnumake && gnumake install -j
 if [[ $? -eq 0 ]]; then
@@ -215,16 +215,16 @@ else
 	bashProfile=".bashrc"
 fi
 
-if ! grep -qE "$bupcbin" $HOME/$bashProfile; then
-	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$bupcbin'"' >> $HOME/$bashProfile
+if ! grep -qE "$bupcbin" "$HOME/$bashProfile"; then
+	printf "%s\n" "" "# BUPC" 'export PATH="$PATH:'$bupcbin'"' >> "$HOME/$bashProfile"
 else
-	printf "Seems like %s is already in the \$PATH of %s. If not, please add it to the \$PATH manually.\n" "$bupcbin" "$HOME/$bashProfile"
+	printf "Seems like %s is already in the PATH of %s. If not, please add it to the PATH manually.\n" "$bupcbin" "$HOME/$bashProfile"
 fi
 
-if ! grep -qE "$bupcman" $HOME/$bashProfile; then
-	printf "%s\n" "" "# BUPC MAN" 'export MANPATH="$MANPATH:'$bupcman'"' >> $HOME/$bashProfile
+if ! grep -qE "$bupcman" "$HOME/$bashProfile"; then
+	printf "%s\n" "" "# BUPC MAN" 'export MANPATH="$MANPATH:'$bupcman'"' >> "$HOME/$bashProfile"
 else
-	printf "Seems like %s is already in the \$MANPATH of %s. If not, please add it to the \$MANPATH manually.\n" "$bupcman" "$HOME/$bashProfile"
+	printf "Seems like %s is already in the MANPATH of %s. If not, please add it to the MANPATH manually.\n" "$bupcman" "$HOME/$bashProfile"
 fi
 
 # remove source code directory #################################################
