@@ -158,7 +158,7 @@ fi
 if [[ ! -z "$local" ]]; then
 	# from now on we're in $folderNameTranslator
 	cd "$folderNameTranslator"
-	gnumake CC="$CC" CXX="$CXX" && gnumake install -j PREFIX="$translatordir" CC="$CC" CXX="$CXX"
+	gnumake CC="$CC" CXX="$CXX" && gnumake install PREFIX="$translatordir" CC="$CC" CXX="$CXX"
 	if [[ $? -eq 0 ]]; then
 		printf "BUPC Translator build suceeded.\n"
 	else
@@ -175,7 +175,7 @@ if [[ ! -z "$local" ]]; then
 else
 	./configure CC="$CC" CXX="$CXX" --prefix="$bupcdir"
 fi
-gnumake && gnumake install -j
+gnumake && gnumake install
 if [[ $? -eq 0 ]]; then
 	printf "BUPC build suceeded.\n"
 else
