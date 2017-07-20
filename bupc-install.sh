@@ -8,7 +8,7 @@ fi
 # default version, will be overridden by cli option
 version="2.24.2"
 
-usage="./$(basename "$0") [-h] [-o outdir] [-v version] [-l local] [-c CC] [-C CXX] --- install Berkeley UPC
+usage="${BASH_SOURCE[0]} [-h] [-o outdir] [-v version] [-l local] [-c CC] [-C CXX] --- install Berkeley UPC
 
 where:
 	-h	show this help message
