@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# xtrace if DEBUG
-if [[ $DEBUG ]]; then
-	set -x
-fi
-
 # default version, will be overridden by cli option
 version="2.24.2"
 
